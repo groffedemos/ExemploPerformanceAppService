@@ -14,6 +14,24 @@ builder.Services.AddSingleton<ConnectionMultiplexer>(
 builder.Services.AddApplicationInsightsTelemetry(
     builder.Configuration);
 
+if (builder.Configuration["Session:Type"]?.ToUpper() == "REDIS")
+    builder.Services.AddStackExchangeRedisCache(redisCacheConfig =>
+        {
+            redisCacheConfig.Configuration =
+                builder.Configuration.GetConnectionString("Redis");
+            redisCacheConfig.InstanceName = "SiteContagem-";
+        });
+else
+    builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(
+        Convert.ToInt32(builder.Configuration["Session:TimeoutInSeconds"]));
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -30,6 +48,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapRazorPages();
 

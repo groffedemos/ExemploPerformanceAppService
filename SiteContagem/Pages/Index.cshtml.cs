@@ -26,7 +26,12 @@ public class IndexModel : PageModel
         client.TrackDependency(
             "Redis", "Get", $"valor = {valorAtual}", inicio, watch.Elapsed, true);
 
+        if (String.IsNullOrWhiteSpace(HttpContext.Session.GetString("UserSession")))
+            HttpContext.Session.SetString("UserSession", Guid.NewGuid().ToString());
+        
         TempData["Contador"] = valorAtual;
+        TempData["UserSession"] = HttpContext.Session.GetString("UserSession");
+        TempData["SessionType"] = configuration["Session:Type"];
         TempData["Local"] = ApplicationStatus.Local;
         TempData["Kernel"] = ApplicationStatus.Kernel;
         TempData["Framework"] = ApplicationStatus.Framework;

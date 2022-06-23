@@ -16,6 +16,7 @@ public static class HealthChecksExtensions
                     new
                     {
                         ApplicationStatus.Healthy,
+                        Instancia = Environment.MachineName,
                         Horario = DateTime.UtcNow.AddHours(-3).ToString("HH:mm:ss")
                     });
                 context.Response.ContentType = MediaTypeNames.Application.Json;
