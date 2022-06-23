@@ -27,9 +27,10 @@ public class IndexModel : PageModel
             "Redis", "Get", $"valor = {valorAtual}", inicio, watch.Elapsed, true);
 
         TempData["Contador"] = valorAtual;
-        TempData["Local"] = InfoContador.Local;
-        TempData["Kernel"] = InfoContador.Kernel;
-        TempData["Framework"] = InfoContador.Framework;
+        TempData["Local"] = ApplicationStatus.Local;
+        TempData["Kernel"] = ApplicationStatus.Kernel;
+        TempData["Framework"] = ApplicationStatus.Framework;
+        TempData["Saudavel"] = ApplicationStatus.Healthy ? "Sim" : "Não";
         TempData["MensagemFixa"] = "Teste";
         TempData["MensagemVariavel"] = configuration["MensagemVariavel"];
     }

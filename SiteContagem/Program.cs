@@ -1,8 +1,10 @@
 using StackExchange.Redis;
+using SiteContagem.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
+builder.Services.AddHealthChecks();
 
 builder.Services.AddSingleton<ConnectionMultiplexer>(
     ConnectionMultiplexer.Connect(
@@ -19,6 +21,8 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
+
+app.UseHealthChecks("/status", HealthChecksExtensions.GetJsonReturn());
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
